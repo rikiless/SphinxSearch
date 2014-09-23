@@ -1,0 +1,10 @@
+# OS or Editor folders/files
+nbproject
+.idea
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+._*
+*.diff
+*.vi
