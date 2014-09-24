@@ -12,6 +12,23 @@ use SphinxClient;
 class Search
 {
 
+	// Known sort modes
+	const SPH_SORT_RELEVANCE = 0;
+	const SPH_SORT_ATTR_DESC = 1;
+	const SPH_SORT_ATTR_ASC = 2;
+	const SPH_SORT_TIME_SEGMENTS = 3;
+	const SPH_SORT_EXTENDED = 4;
+	const SPH_SORT_EXPR = 5;
+
+	// Known match modes
+	const SPH_MATCH_ALL = 0;
+	const SPH_MATCH_ANY = 1;
+	const SPH_MATCH_PHRASE = 2;
+	const SPH_MATCH_BOOLEAN = 3;
+	const SPH_MATCH_EXTENDED = 4;
+	const SPH_MATCH_FULLSCAN = 5;
+	const SPH_MATCH_EXTENDED2 = 6;
+
 	/**	@var SphinxClient */
 	private $search;
 
@@ -20,7 +37,7 @@ class Search
 	private $maxResults = 1000;
 
 	/** @var int */
-	private $sortMode = SPH_SORT_RELEVANCE;
+	private $sortMode = self::SPH_SORT_RELEVANCE;
 
 	private $weights = [];
 
@@ -233,7 +250,7 @@ class Search
 		$this->search->SetMaxQueryTime($this->maxQueryTime);
 		$this->search->SetFieldWeights($this->weights);
 		$this->search->SetLimits(0, $this->maxResults, 1000);
-		$this->search->SetMatchMode(SPH_MATCH_EXTENDED);
+		$this->search->SetMatchMode(self::SPH_MATCH_EXTENDED);
 		$this->search->SetSortMode($this->sortMode, $this->sortBy);
 	}
 
