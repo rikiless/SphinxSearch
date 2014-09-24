@@ -193,7 +193,7 @@ class Search
 				}
 			}
 		}
-		if ($error === 'failed to send client protocol version') {
+		if ($error === 'failed to send client protocol version' or strpos($error, 'connection to localhost')) {
 			throw new DaemonNotRunningException;
 		} elseif ($error) {
 			throw new InvalidStateException(sprintf('SphinxClient throwed "%s"', $error));
