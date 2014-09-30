@@ -212,6 +212,8 @@ class Search
 		}
 		if ($error === 'failed to send client protocol version' or strpos($error, 'connection to localhost') !== FALSE) {
 			throw new DaemonNotRunningException;
+		} elseif ($error === 'no enabled local indexes to search') {
+			throw new IndexesNotLoadedException;
 		} elseif ($error) {
 			throw new InvalidStateException(sprintf('SphinxClient throwed "%s"', $error));
 		}
