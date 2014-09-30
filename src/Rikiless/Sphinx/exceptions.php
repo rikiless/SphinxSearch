@@ -21,3 +21,8 @@ class DaemonNotRunningException extends InvalidStateException implements Excepti
 {
 
 }
+
+class IndexesNotLoadedException extends InvalidStateException implements Exception
+{
+	
+}
