@@ -30,7 +30,7 @@ class Search
 	const SPH_MATCH_EXTENDED2 = 6;
 
 	/**	@var SphinxClient */
-	private $search;
+	private $client;
 
 	private $maxQueryTime = 10000; // 10 seconds
 
@@ -51,7 +51,7 @@ class Search
 
 	public function __construct(array $config)
 	{
-		$this->search = new SphinxClient($config['host'], $config['port']);
+		$this->client = new SphinxClient($config['host'], $config['port']);
 
 		if (array_key_exists('index', $config)) {
 			$this->index = $config['index'];
@@ -118,7 +118,7 @@ class Search
 	 */
 	public function setFilter($column, array $values, $exclude = FALSE)
 	{
-		$this->search->SetFilter($column, $values, $exclude);
+		$this->client->SetFilter($column, $values, $exclude);
 		return $this;
 	}
 
@@ -133,7 +133,7 @@ class Search
 	 */
 	public function setFilterRange($column, $min, $max, $exclude = FALSE)
 	{
-		$this->search->SetFilterRange($column, $min, $max, $exclude);
+		$this->client->SetFilterRange($column, $min, $max, $exclude);
 		return $this;
 	}
 
@@ -166,15 +166,15 @@ class Search
 		}
 
 		if ($escape) {
-			$fulltext = $this->search->EscapeString($fulltext);
+			$fulltext = $this->client->EscapeString($fulltext);
 		}
 
 		$index = $index ?: $this->index;
 
 		$this->configureClient();
-		$query = $this->search->Query($fulltext, $index, $this->comment);
+		$query = $this->client->Query($fulltext, $index, $this->comment);
 
-		if ($error = $this->search->GetLastError()) {
+		if ($error = $this->client->GetLastError()) {
 			throw new InvalidStateException(sprintf('SphinxClient throwed "%s"', $error));
 		}
 
@@ -192,11 +192,11 @@ class Search
 		$index = $index ?: $this->index;
 
 		if ($escape) {
-			$fulltext = $this->search->EscapeString($fulltext);
+			$fulltext = $this->client->EscapeString($fulltext);
 		}
 
 		$this->configureClient();
-		$this->search->AddQuery($fulltext, $index, $this->comment);
+		$this->client->AddQuery($fulltext, $index, $this->comment);
 
 		return $this;
 	}
@@ -208,10 +208,10 @@ class Search
 	 */
 	public function runQueries()
 	{
-		$results = $this->search->RunQueries();
+		$results = $this->client->RunQueries();
 		$data = [];
 
-		$error = $this->search->GetLastError();
+		$error = $this->client->GetLastError();
 		if ( ! $error) {
 			foreach ($results as $row) {
 				if ($row['error']) {
@@ -247,7 +247,7 @@ class Search
 	 */
 	public function resetFilters()
 	{
-		$this->search->ResetFilters();
+		$this->client->ResetFilters();
 		return $this;
 	}
 
@@ -258,11 +258,11 @@ class Search
 	 */
 	private function configureClient()
 	{
-		$this->search->SetMaxQueryTime($this->maxQueryTime);
-		$this->search->SetFieldWeights($this->weights);
-		$this->search->SetLimits(0, $this->maxResults, 1000);
-		$this->search->SetMatchMode(self::SPH_MATCH_EXTENDED);
-		$this->search->SetSortMode($this->sortMode, $this->sortBy);
+		$this->client->SetMaxQueryTime($this->maxQueryTime);
+		$this->client->SetFieldWeights($this->weights);
+		$this->client->SetLimits(0, $this->maxResults, 1000);
+		$this->client->SetMatchMode(self::SPH_MATCH_EXTENDED);
+		$this->client->SetSortMode($this->sortMode, $this->sortBy);
 	}
 
 }
