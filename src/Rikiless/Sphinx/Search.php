@@ -156,12 +156,17 @@ class Search
 	/**
 	 * @param string $fulltext
 	 * @param string $index
+	 * @param bool $escape
 	 * @return Data
 	 */
-	public function query($fulltext, $index = NULL)
+	public function query($fulltext, $index = NULL, $escape = TRUE)
 	{
 		if ( ! $fulltext) {
 			throw new InvalidArgumentException('Empty query');
+		}
+
+		if ($escape) {
+			$fulltext = $this->search->EscapeString($fulltext);
 		}
 
 		$index = $index ?: $this->index;
@@ -178,13 +183,17 @@ class Search
 
 
 
-	public function addQuery($fulltext, $index = NULL)
+	public function addQuery($fulltext, $index = NULL, $escape = TRUE)
 	{
 		if ( ! $fulltext) {
 			throw new InvalidArgumentException('Empty query');
 		}
 
 		$index = $index ?: $this->index;
+
+		if ($escape) {
+			$fulltext = $this->search->EscapeString($fulltext);
+		}
 
 		$this->configureClient();
 		$this->search->AddQuery($fulltext, $index, $this->comment);
